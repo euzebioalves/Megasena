@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mega da Virada - Painel dos meus jogos (V3)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+    <meta name="theme-color" content="#10b981" />
+    <link rel="manifest" href="manifest.json" />
+
+    <!-- iOS / atalho na tela inicial -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="icon-192.png">
+  
+  <style>
+    :root {
+      font-size: 16px;
+      --bg: #050814;
+      --card-bg: #111827;
+      --card-border: #1f2933;
+      --primary: #10b981;
+      --primary-soft: rgba(16, 185, 129, 0.15);
+      --danger: #ef4444;
+      --text: #e5e7eb;
+      --text-soft: #9ca3af;
+      --chip-bg: #111827;
+      --chip-border: #374151;
+      --hit-bg: #10b981;
+      --hit-text: #0b1120;
+      --number-bg: #111827;
+      --number-active-bg: #1d283a;
+      --number-border: #374151;
+      --warn: #facc15;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #111827 0, #020617 55%, #000 100%);
+      color: var(--text);
+    }
+
+    .app {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 1rem 0.75rem 2.5rem;
+    }
+
+    header {
+      margin-bottom: 1rem;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    header h1 span.logo-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #10b981, #22c55e);
+      box-shadow: 0 0 12px rgba(34, 197, 94, 0.8);
+    }
+
+    header p {
+      margin: 0.25rem 0 0;
+      font-size: 0.8rem;
+      color: var(--text-soft);
+    }
+
+    .top-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+      font-size: 0.8rem;
+      color: var(--text-soft);
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: rgba(15, 23, 42, 0.9);
+      font-size: 0.75rem;
+    }
+
+    .tag-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 6px rgba(34, 197, 94, 0.7);
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.5rem;
+      margin: 0.75rem 0 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    button {
+      font-family: inherit;
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: none;
+      padding: 0.4rem 0.9rem;
+      font-size: 0.8rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.12s ease;
+      white-space: nowrap;
+    }
+
+    .btn:active {
+      transform: scale(0.96);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #10b981, #22c55e);
+      color: #022c22;
+      box-shadow: 0 0 16px rgba(16, 185, 129, 0.45);
+    }
+
+    .btn-outline {
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-soft);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-soft);
+      border: 1px dashed rgba(148, 163, 184, 0.4);
+    }
+
+    .numbers-panel {
+      background: rgba(15, 23, 42, 0.9);
+      border-radius: 1rem;
+      padding: 0.75rem 0.6rem 0.9rem;
+      border: 1px solid rgba(55, 65, 81, 0.8);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.9);
+      margin-bottom: 1rem;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.5rem;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .panel-header h2 {
+      margin: 0;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .panel-header h2 span.icon {
+      font-size: 1rem;
+    }
+
+    .panel-subtitle {
+      font-size: 0.75rem;
+      color: var(--text-soft);
+    }
+
+    .selected-count {
+      font-size: 0.75rem;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .number-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 0.35rem;
+      margin-top: 0.4rem;
+    }
+
+    @media (min-width: 480px) {
+      .number-grid {
+        grid-template-columns: repeat(10, 1fr);
+      }
+    }
+
+    .number-btn {
+      border-radius: 999px;
+      border: 1px solid var(--number-border);
+      background: var(--number-bg);
+      color: var(--text-soft);
+      font-size: 0.78rem;
+      padding: 0.35rem 0;
+      text-align: center;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.1s ease, color 0.1s ease, border-color 0.1s ease, box-shadow 0.1s ease, transform 0.06s ease;
+    }
+
+    .number-btn:active {
+      transform: scale(0.94);
+    }
+
+    .number-btn.active {
+      background: var(--number-active-bg);
+      color: var(--primary);
+      border-color: var(--primary);
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.6);
+    }
+
+    .number-btn.active .num {
+      font-weight: 600;
+    }
+
+    /* Painel de novo jogo / bolão */
+    .add-bet-panel {
+      margin-top: 0.4rem;
+      border-radius: 0.9rem;
+      border: 1px dashed rgba(148, 163, 184, 0.6);
+      background: rgba(15, 23, 42, 0.85);
+      padding: 0.6rem 0.7rem 0.7rem;
+      display: none;
+    }
+
+    .add-bet-panel.active {
+      display: block;
+    }
+
+    .add-bet-header {
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin-bottom: 0.35rem;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .add-bet-header span.icon {
+      font-size: 0.9rem;
+    }
+
+    .add-bet-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 0.35rem;
+      flex-wrap: wrap;
+    }
+
+    .add-bet-panel input {
+      flex: 1;
+      min-width: 0;
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text);
+      padding: 0.35rem 0.7rem;
+      font-size: 0.8rem;
+    }
+
+    .add-bet-panel input::placeholder {
+      color: var(--text-soft);
+    }
+
+    .add-bet-help {
+      font-size: 0.7rem;
+      color: var(--text-soft);
+      margin-top: 0.25rem;
+    }
+
+    .add-bet-error {
+      font-size: 0.7rem;
+      color: var(--danger);
+      margin-top: 0.2rem;
+      min-height: 0.8rem;
+    }
+
+    /* Painel do simulador de premiação */
+    .payout-panel {
+      margin-top: 0.75rem;
+      border-radius: 0.9rem;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: rgba(15, 23, 42, 0.95);
+      padding: 0.65rem 0.7rem 0.7rem;
+      box-shadow: 0 12px 32px rgba(15, 23, 42, 0.9);
+    }
+
+    .payout-header {
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .payout-header span.icon {
+      font-size: 1rem;
+    }
+
+    .payout-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.35rem;
+    }
+
+    @media (min-width: 600px) {
+      .payout-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .payout-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+      font-size: 0.75rem;
+    }
+
+    .payout-field label {
+      color: var(--text-soft);
+    }
+
+    .payout-field input {
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text);
+      padding: 0.35rem 0.7rem;
+      font-size: 0.8rem;
+    }
+
+    .payout-field input::placeholder {
+      color: var(--text-soft);
+    }
+
+    .payout-note {
+      margin-top: 0.4rem;
+      font-size: 0.7rem;
+      color: var(--text-soft);
+    }
+
+    .payout-note span {
+      color: var(--primary);
+    }
+
+    .bets-section {
+      margin-top: 0.75rem;
+    }
+
+    .bets-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.4rem;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .bets-header h2 {
+      margin: 0;
+      font-size: 0.95rem;
+    }
+
+    .bets-summary {
+      font-size: 0.75rem;
+      color: var(--text-soft);
+      text-align: right;
+    }
+
+    .hits-breakdown {
+      font-size: 0.75rem;
+      color: var(--text-soft);
+      margin-top: 0.15rem;
+      text-align: right;
+    }
+
+    .hits-breakdown span.highlight {
+      color: var(--primary);
+      font-weight: 500;
+    }
+
+    .bets-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      margin-top: 0.3rem;
+    }
+
+    .bet-card {
+      background: rgba(15, 23, 42, 0.92);
+      border-radius: 0.85rem;
+      padding: 0.6rem 0.7rem 0.55rem;
+      border: 1px solid rgba(55, 65, 81, 0.85);
+      box-shadow: 0 10px 28px rgba(15, 23, 42, 0.9);
+    }
+
+    .bet-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.35rem;
+      gap: 0.5rem;
+    }
+
+    .bet-title-group {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .bet-title {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #e5e7eb;
+    }
+
+    .bet-tag {
+      font-size: 0.7rem;
+      padding: 0.05rem 0.4rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      color: var(--text-soft);
+    }
+
+    .bet-hits {
+      font-size: 0.78rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.8);
+      background: radial-gradient(circle at top left, rgba(16, 185, 129, 0.12), rgba(15, 23, 42, 0.9));
+      color: var(--text-soft);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.2rem;
+    }
+
+    .bet-hits[data-hits="0"] {
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .bet-hits[data-hits="4"],
+    .bet-hits[data-hits="5"],
+    .bet-hits[data-hits="6"] {
+      border-color: rgba(16, 185, 129, 0.95);
+      color: var(--primary);
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.6);
+    }
+
+    .bet-hits .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(148, 163, 184, 0.7);
+    }
+
+    .bet-hits[data-hits="4"] .dot,
+    .bet-hits[data-hits="5"] .dot,
+    .bet-hits[data-hits="6"] .dot {
+      background: #22c55e;
+    }
+
+    .bet-meta-line {
+      font-size: 0.72rem;
+      color: var(--text-soft);
+      margin-bottom: 0.25rem;
+    }
+
+    .bet-payout {
+      font-size: 0.75rem;
+      color: var(--text-soft);
+      margin-bottom: 0.25rem;
+      display: none;
+    }
+
+    .bet-payout span.value {
+      color: var(--primary);
+      font-weight: 500;
+    }
+
+    .bet-payout span.per-share {
+      color: var(--text-soft);
+    }
+
+    .bet-numbers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+    }
+
+    .bet-chip {
+      min-width: 2.1rem;
+      text-align: center;
+      font-size: 0.78rem;
+      padding: 0.22rem 0.35rem;
+      border-radius: 999px;
+      border: 1px solid var(--chip-border);
+      background: var(--chip-bg);
+      color: var(--text-soft);
+      transition: background 0.1s ease, color 0.1s ease, border-color 0.1s ease, transform 0.08s ease, box-shadow 0.08s ease;
+    }
+
+    .bet-chip.hit {
+      background: var(--hit-bg);
+      color: var(--hit-text);
+      border-color: #22c55e;
+      font-weight: 600;
+      box-shadow: 0 0 14px rgba(16, 185, 129, 0.7);
+      transform: translateY(-1px);
+    }
+
+    .bet-chip .num {
+      font-variant-numeric: tabular-nums;
+    }
+
+    .bet-remove {
+      font-size: 0.7rem;
+      border-radius: 999px;
+      border: 1px solid rgba(239, 68, 68, 0.7);
+      background: rgba(127, 29, 29, 0.2);
+      color: #fecaca;
+      padding: 0.1rem 0.45rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.2rem;
+    }
+
+    .bet-remove:active {
+      transform: scale(0.95);
+    }
+
+    .footer-note {
+      margin-top: 1.2rem;
+      font-size: 0.7rem;
+      color: var(--text-soft);
+      text-align: center;
+      opacity: 0.8;
+    }
+
+    .footer-note span {
+      color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1><span class="logo-dot"></span>Mega da Virada • Painel dos meus jogos (V3)</h1>
+      <p>Toque nos números sorteados, cadastre outros jogos/bolões e veja automaticamente acertos, premiação estimada e valor por cota.</p>
+      <div class="top-info">
+        <div class="tag">
+          <span class="tag-dot"></span>
+          <span>Modo offline • seus dados ficam só no aparelho</span>
+        </div>
+        <div class="tag">
+          <span>Simulador com Sena / Quina / Quadra + bolões</span>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn btn-primary" id="btn-clear">
+          ♻️ Limpar marcações
+        </button>
+        <button class="btn btn-outline" id="btn-help">
+          ❓ Como usar
+        </button>
+        <button class="btn btn-ghost" id="btn-toggle-add">
+          ➕ Adicionar jogo / bolão
+        </button>
+      </div>
+
+      <div class="add-bet-panel" id="add-bet-panel">
+        <div class="add-bet-header">
+          <span class="icon">🧾</span>
+          <span>Cadastrar outro jogo ou bolão</span>
+        </div>
+        <div class="add-bet-form">
+          <div class="form-row">
+            <input id="bet-id-input" placeholder="Identificador (ex: B01, Bolão Família, etc.)" />
+          </div>
+          <div class="form-row">
+            <input id="bet-numbers-input" placeholder="Números separados por espaço ou vírgula (mín. 6, máx. 15)" />
+          </div>
+          <div class="form-row">
+            <input id="bet-cost-input" placeholder="Valor pago na aposta (R$) - opcional" />
+            <input id="bet-shares-input" placeholder="Qtd. de cotas (bolão). Padrão: 1" />
+          </div>
+          <div class="form-row">
+            <button class="btn btn-primary" id="btn-save-bet">Salvar jogo</button>
+          </div>
+          <div class="add-bet-help">
+            Exemplo: <code>02 07 15 23 33 45 50 60</code> (pode ter mais de 6 dezenas para bolão).<br/>
+            Se não informar o valor, o app estima com base na quantidade de dezenas.
+          </div>
+          <div class="add-bet-error" id="add-bet-error"></div>
+        </div>
+      </div>
+    </header>
+
+    <section class="numbers-panel">
+      <div class="panel-header">
+        <div>
+          <h2><span class="icon">🎯</span>Números sorteados</h2>
+          <div class="panel-subtitle">Toque para marcar / desmarcar. Acertos e premiação estimada são atualizados na hora.</div>
+        </div>
+        <div class="selected-count">
+          <span id="selected-count">0</span> nº marcados
+        </div>
+      </div>
+      <div class="number-grid" id="number-grid">
+        <!-- 1–60 via JS -->
+      </div>
+    </section>
+
+    <section class="payout-panel">
+      <div class="payout-header">
+        <span class="icon">💰</span>
+        <span>Simulador de premiação</span>
+      </div>
+      <div class="payout-grid">
+        <div class="payout-field">
+          <label for="prize-sena">Prêmio por Sena (R$ por aposta simples)</label>
+          <input id="prize-sena" type="number" min="0" step="0.01" placeholder="Ex: 100000000" />
+        </div>
+        <div class="payout-field">
+          <label for="prize-quina">Prêmio por Quina (R$ por aposta simples)</label>
+          <input id="prize-quina" type="number" min="0" step="0.01" placeholder="Ex: 50000" />
+        </div>
+        <div class="payout-field">
+          <label for="prize-quadra">Prêmio por Quadra (R$ por aposta simples)</label>
+          <input id="prize-quadra" type="number" min="0" step="0.01" placeholder="Ex: 800" />
+        </div>
+      </div>
+      <div class="payout-note">
+        Preencha com os valores divulgados pela Caixa (valor <b>por ganhador</b> em cada faixa). O app calcula a premiação estimada para jogos simples, múltiplos e bolões,
+        considerando quantas "apostas simples" existem dentro de cada jogo. <span>É um simulador, não substitui o resultado oficial.</span>
+      </div>
+    </section>
+
+    <section class="bets-section">
+      <div class="bets-header">
+        <h2>Meus jogos</h2>
+        <div class="bets-summary">
+          <span id="summary-text">Nenhum número sorteado marcado ainda.</span>
+          <div class="hits-breakdown" id="hits-breakdown">
+            4 pts: 0 jogos • 5 pts: 0 jogos • 6 pts: 0 jogos • Total estimado: R$ 0,00
+          </div>
+        </div>
+      </div>
+      <div class="bets-list" id="bets-list">
+        <!-- Jogos via JS -->
+      </div>
+    </section>
+
+    <div class="footer-note">
+      Dica: adicione esta página à tela inicial do celular para usar como se fosse um app. <span>Boa sorte!</span>
+    </div>
+  </div>
+
+  <script>
+    // =========================
+    // Configuração
+    // =========================
+    // Valor base da aposta simples (6 dezenas). Usado só para estimar custo de múltipla se você não informar outro.
+    const BASE_BET_PRICE = 6; // R$ 6,00
+
+    // =========================
+    // Dados base: seus 20 jogos iniciais
+    // =========================
+    const defaultBets = [
+      { id: "J01", numbers: [3, 12, 19, 36, 38, 56] },
+      { id: "J02", numbers: [1, 3, 4, 34, 43, 54] },
+      { id: "J03", numbers: [5, 15, 27, 36, 41, 51] },
+      { id: "J04", numbers: [3, 7, 17, 37, 41, 58] },
+      { id: "J05", numbers: [1, 14, 21, 41, 56, 60] },
+      { id: "J06", numbers: [5, 10, 18, 20, 33, 47] },
+      { id: "J07", numbers: [10, 17, 22, 34, 51, 58] },
+      { id: "J08", numbers: [5, 7, 16, 28, 33, 49] },
+      { id: "J09", numbers: [10, 8, 23, 39, 41, 52] },
+      { id: "J10", numbers: [33, 9, 14, 26, 36, 48] },
+      { id: "J11", numbers: [20, 13, 24, 44, 51, 59] },
+      { id: "J12", numbers: [34, 7, 11, 29, 41, 60] },
+      { id: "J13", numbers: [36, 8, 19, 39, 56, 47] },
+      { id: "J14", numbers: [58, 9, 18, 26, 33, 45] },
+      { id: "J15", numbers: [7, 8, 20, 32, 44, 58] },
+      { id: "J16", numbers: [9, 13, 17, 38, 54, 56] },
+      { id: "J17", numbers: [26, 28, 10, 31, 39, 51] },
+      { id: "J18", numbers: [7, 39, 12, 33, 44, 59] },
+      { id: "J19", numbers: [8, 54, 15, 34, 41, 60] },
+      { id: "J20", numbers: [9, 26, 18, 36, 44, 57] }
+    ];
+
+    // Storage keys
+    const STORAGE_KEY_NUMBERS = "mega_da_virada_sorteados_v1";
+    const STORAGE_KEY_USER_BETS = "mega_da_virada_user_bets_v2";
+
+    // Estado
+    let selectedNumbers = new Set();
+    let userBets = []; // { uid, id, numbers, isUser, cost, shares }
+    let allBets = [];  // default + user
+
+    // Mapas DOM
+    const numberButtonsMap = new Map(); // num -> botão
+    const betChipMap = new Map();       // "uid-num" -> chip
+    const betHitsMap = new Map();       // uid -> elemento hits
+    const betPayoutMap = new Map();     // uid -> elemento de premiação
+
+    // Elementos
+    const numberGridEl = document.getElementById("number-grid");
+    const betsListEl = document.getElementById("bets-list");
+    const selectedCountEl = document.getElementById("selected-count");
+    const summaryTextEl = document.getElementById("summary-text");
+    const hitsBreakdownEl = document.getElementById("hits-breakdown");
+    const btnClear = document.getElementById("btn-clear");
+    const btnHelp = document.getElementById("btn-help");
+    const btnToggleAdd = document.getElementById("btn-toggle-add");
+    const addBetPanelEl = document.getElementById("add-bet-panel");
+    const betIdInput = document.getElementById("bet-id-input");
+    const betNumbersInput = document.getElementById("bet-numbers-input");
+    const betCostInput = document.getElementById("bet-cost-input");
+    const betSharesInput = document.getElementById("bet-shares-input");
+    const btnSaveBet = document.getElementById("btn-save-bet");
+    const addBetErrorEl = document.getElementById("add-bet-error");
+
+    const prizeSenaInput = document.getElementById("prize-sena");
+    const prizeQuinaInput = document.getElementById("prize-quina");
+    const prizeQuadraInput = document.getElementById("prize-quadra");
+
+    // =========================
+    // Inicialização
+    // =========================
+    init();
+
+    function init() {
+      loadFromStorage();
+      buildAllBets();
+      renderNumberGrid();
+      renderBets();
+      updateAllHits();
+      updateSelectedCount();
+      attachEvents();
+    }
+
+    function buildAllBets() {
+      const mappedDefault = defaultBets.map((b, index) => ({
+        uid: "default_" + (index + 1),
+        id: b.id,
+        numbers: b.numbers.slice(),
+        isUser: false,
+        cost: estimateBetCost(b.numbers.length),
+        shares: 1
+      }));
+
+      // Garante uid / cost / shares nos userBets
+      userBets = userBets.map((b, idx) => {
+        const nums = (b.numbers || []).slice();
+        const len = nums.length;
+        return {
+          uid: b.uid || ("user_" + Date.now() + "_" + idx),
+          id: b.id || "",
+          numbers: nums,
+          isUser: true,
+          cost: typeof b.cost === "number" && b.cost > 0 ? b.cost : estimateBetCost(len),
+          shares: Number.isInteger(b.shares) && b.shares >= 1 ? b.shares : 1
+        };
+      }).filter(b => b.numbers.length >= 6);
+
+      allBets = [...mappedDefault, ...userBets];
+    }
+
+    function renderNumberGrid() {
+      numberGridEl.innerHTML = "";
+      numberButtonsMap.clear();
+
+      for (let n = 1; n <= 60; n++) {
+        const btn = document.createElement("div");
+        btn.className = "number-btn";
+        btn.dataset.num = String(n);
+        btn.innerHTML = `<span class="num">${String(n).padStart(2, "0")}</span>`;
+        if (selectedNumbers.has(n)) {
+          btn.classList.add("active");
+        }
+        numberGridEl.appendChild(btn);
+        numberButtonsMap.set(n, btn);
+      }
+    }
+
+    function renderBets() {
+      betsListEl.innerHTML = "";
+      betChipMap.clear();
+      betHitsMap.clear();
+      betPayoutMap.clear();
+
+      allBets.forEach((bet, index) => {
+        const card = document.createElement("div");
+        card.className = "bet-card";
+        card.dataset.uid = bet.uid;
+
+        const header = document.createElement("div");
+        header.className = "bet-header";
+
+        const titleGroup = document.createElement("div");
+        titleGroup.className = "bet-title-group";
+
+        const title = document.createElement("div");
+        title.className = "bet-title";
+        title.textContent = bet.id || `Jogo ${index + 1}`;
+
+        titleGroup.appendChild(title);
+
+        if (bet.isUser) {
+          const tag = document.createElement("span");
+          tag.className = "bet-tag";
+          tag.textContent = "Adicionado";
+          titleGroup.appendChild(tag);
+        } else if (index < defaultBets.length) {
+          const tag = document.createElement("span");
+          tag.className = "bet-tag";
+          tag.textContent = "Original 20";
+          titleGroup.appendChild(tag);
+        }
+
+        const hits = document.createElement("div");
+        hits.className = "bet-hits";
+        hits.dataset.hits = "0";
+        hits.innerHTML = `<span class="dot"></span><span><span class="hits-count">0</span> acertos</span>`;
+
+        betHitsMap.set(bet.uid, hits);
+
+        header.appendChild(titleGroup);
+
+        const rightHeader = document.createElement("div");
+        rightHeader.style.display = "flex";
+        rightHeader.style.alignItems = "center";
+        rightHeader.style.gap = "0.35rem";
+
+        if (bet.isUser) {
+          const removeBtn = document.createElement("button");
+          removeBtn.className = "bet-remove";
+          removeBtn.type = "button";
+          removeBtn.dataset.uid = bet.uid;
+          removeBtn.innerHTML = `🗑 Remover`;
+          rightHeader.appendChild(removeBtn);
+        }
+
+        rightHeader.appendChild(hits);
+        header.appendChild(rightHeader);
+
+        card.appendChild(header);
+
+        const metaLine = document.createElement("div");
+        metaLine.className = "bet-meta-line";
+        const costText = formatCurrency(bet.cost || 0);
+        const sharesText = bet.shares && bet.shares > 1
+          ? `${bet.shares} cotas`
+          : "1 cota";
+        metaLine.textContent = `${costText} • ${sharesText}`;
+        card.appendChild(metaLine);
+
+        const payoutEl = document.createElement("div");
+        payoutEl.className = "bet-payout";
+        payoutEl.innerHTML = `Premiação estimada: <span class="value">R$ 0,00</span>`;
+        card.appendChild(payoutEl);
+        betPayoutMap.set(bet.uid, payoutEl);
+
+        const numbersContainer = document.createElement("div");
+        numbersContainer.className = "bet-numbers";
+
+        bet.numbers.forEach((num) => {
+          const chip = document.createElement("span");
+          chip.className = "bet-chip";
+          chip.dataset.num = String(num);
+          chip.dataset.uid = bet.uid;
+          chip.innerHTML = `<span class="num">${String(num).padStart(2, "0")}</span>`;
+          betChipMap.set(`${bet.uid}-${num}`, chip);
+          numbersContainer.appendChild(chip);
+        });
+
+        card.appendChild(numbersContainer);
+        betsListEl.appendChild(card);
+      });
+    }
+
+    function attachEvents() {
+      // Clique nos números 1–60
+      numberGridEl.addEventListener("click", (e) => {
+        const btn = e.target.closest(".number-btn");
+        if (!btn) return;
+        const num = Number(btn.dataset.num);
+        toggleNumber(num);
+      });
+
+      // Botão limpar
+      btnClear.addEventListener("click", () => {
+        if (!selectedNumbers.size || !confirm("Deseja limpar todas as marcações de números sorteados?")) {
+          return;
+        }
+        selectedNumbers.clear();
+        saveNumbersToStorage();
+        numberButtonsMap.forEach((btn) => btn.classList.remove("active"));
+        updateAllHits();
+        updateSelectedCount();
+      });
+
+      // Botão ajuda
+      btnHelp.addEventListener("click", () => {
+        alert(
+          "Como usar:\n\n" +
+          "1) Quando sair um número no sorteio, toque nele na grade de 1 a 60 lá em cima.\n" +
+          "2) O número ficará marcado e todos os jogos que tiverem esse número serão destacados em verde.\n" +
+          "3) Cada jogo mostra quantos acertos possui.\n" +
+          "4) No painel 'Simulador de premiação', informe o valor pago pela Caixa em cada faixa (por aposta simples).\n" +
+          "5) O app calcula, para cada jogo (simples, múltiplo ou bolão), a quantidade de Senas, Quinas e Quadras geradas e a premiação estimada.\n" +
+          "6) Em jogos de bolão, você pode informar a quantidade de cotas, e o app estima o valor por cota."
+        );
+      });
+
+      // Mostrar / esconder painel de novo jogo
+      btnToggleAdd.addEventListener("click", () => {
+        addBetPanelEl.classList.toggle("active");
+      });
+
+      // Salvar novo jogo
+      btnSaveBet.addEventListener("click", () => {
+        addBetErrorEl.textContent = "";
+        const id = (betIdInput.value || "").trim();
+        const numbersRaw = (betNumbersInput.value || "").trim();
+        const costRaw = (betCostInput.value || "").trim();
+        const sharesRaw = (betSharesInput.value || "").trim();
+
+        if (!numbersRaw) {
+          addBetErrorEl.textContent = "Informe os números do jogo.";
+          return;
+        }
+
+        const parsed = parseNumbers(numbersRaw);
+        if (parsed.error) {
+          addBetErrorEl.textContent = parsed.error;
+          return;
+        }
+
+        const nums = parsed.numbers;
+        if (nums.length < 6 || nums.length > 15) {
+          addBetErrorEl.textContent = "O jogo deve ter entre 6 e 15 números.";
+          return;
+        }
+
+        const label = id || gerarIdAutomatico();
+        let cost = NaN;
+        if (costRaw) {
+          cost = parseFloat(costRaw.replace(",", "."));
+        }
+        if (!Number.isFinite(cost) || cost <= 0) {
+          cost = estimateBetCost(nums.length);
+        }
+
+        let shares = parseInt(sharesRaw || "1", 10);
+        if (!Number.isInteger(shares) || shares <= 0) shares = 1;
+
+        const newBet = {
+          uid: "user_" + Date.now() + "_" + Math.floor(Math.random() * 100000),
+          id: label,
+          numbers: nums,
+          isUser: true,
+          cost,
+          shares
+        };
+
+        userBets.push(newBet);
+        saveUserBetsToStorage();
+        buildAllBets();
+        renderBets();
+        updateAllHits();
+
+        betIdInput.value = "";
+        betNumbersInput.value = "";
+        betCostInput.value = "";
+        betSharesInput.value = "";
+        addBetErrorEl.textContent = "";
+        alert("Jogo/bolão adicionado com sucesso!");
+      });
+
+      // Remover jogo adicionado
+      betsListEl.addEventListener("click", (e) => {
+        const removeBtn = e.target.closest(".bet-remove");
+        if (!removeBtn) return;
+        const uid = removeBtn.dataset.uid;
+        if (!uid) return;
+
+        const bet = allBets.find(b => b.uid === uid);
+        const label = bet?.id || "jogo";
+
+        if (!confirm(`Remover "${label}" da lista?`)) return;
+
+        userBets = userBets.filter((b) => b.uid !== uid);
+        saveUserBetsToStorage();
+        buildAllBets();
+        renderBets();
+        updateAllHits();
+      });
+
+      // Simulador de premiação: sempre que mudar algum valor, recalcula
+      ["input", "change"].forEach(ev => {
+        prizeSenaInput.addEventListener(ev, updateAllHits);
+        prizeQuinaInput.addEventListener(ev, updateAllHits);
+        prizeQuadraInput.addEventListener(ev, updateAllHits);
+      });
+    }
+
+    // =========================
+    // Lógica principal
+    // =========================
+    function toggleNumber(num) {
+      if (selectedNumbers.has(num)) {
+        selectedNumbers.delete(num);
+      } else {
+        selectedNumbers.add(num);
+      }
+      saveNumbersToStorage();
+      updateNumberButton(num);
+      updateAllHits();
+      updateSelectedCount();
+    }
+
+    function updateNumberButton(num) {
+      const btn = numberButtonsMap.get(num);
+      if (!btn) return;
+      if (selectedNumbers.has(num)) {
+        btn.classList.add("active");
+      } else {
+        btn.classList.remove("active");
+      }
+    }
+
+    function updateAllHits() {
+      let totalHits = 0;
+      let bestHits = 0;
+      let count4 = 0;
+      let count5 = 0;
+      let count6 = 0;
+      let totalPrizeAll = 0;
+
+      const senaPrize = parseFloat(prizeSenaInput.value.replace(",", ".")) || 0;
+      const quinaPrize = parseFloat(prizeQuinaInput.value.replace(",", ".")) || 0;
+      const quadraPrize = parseFloat(prizeQuadraInput.value.replace(",", ".")) || 0;
+      const hasPrizeConfig = senaPrize > 0 || quinaPrize > 0 || quadraPrize > 0;
+
+      allBets.forEach((bet) => {
+        let hitsCount = 0;
+
+        bet.numbers.forEach((num) => {
+          const chip = betChipMap.get(`${bet.uid}-${num}`);
+          if (!chip) return;
+          if (selectedNumbers.has(num)) {
+            chip.classList.add("hit");
+            hitsCount++;
+          } else {
+            chip.classList.remove("hit");
+          }
+        });
+
+        totalHits += hitsCount;
+        if (hitsCount > bestHits) bestHits = hitsCount;
+
+        const hitsEl = betHitsMap.get(bet.uid);
+        if (hitsEl) {
+          hitsEl.dataset.hits = String(hitsCount);
+          const spanCount = hitsEl.querySelector(".hits-count");
+          if (spanCount) {
+            spanCount.textContent = String(hitsCount);
+          }
+        }
+
+        if (hitsCount === 4) count4++;
+        if (hitsCount === 5) count5++;
+        if (hitsCount === 6) count6++;
+
+        // Cálculo da premiação estimada
+        let prizeForBet = 0;
+        if (hasPrizeConfig && hitsCount >= 4) {
+          const r = hitsCount; // nº de acertos no jogo
+          const m = bet.numbers.length;
+          const nonHits = m - r;
+
+          // Fórmulas combinatórias: C(r, t) * C(m - r, 6 - t)
+          const senaCount = (r >= 6) ? comb(r, 6) : 0;
+          const quinaCount = (r >= 5 && nonHits >= 1) ? comb(r, 5) * comb(nonHits, 1) : 0;
+          const quadraCount = (r >= 4 && nonHits >= 2) ? comb(r, 4) * comb(nonHits, 2) : 0;
+
+          prizeForBet =
+            senaCount * senaPrize +
+            quinaCount * quinaPrize +
+            quadraCount * quadraPrize;
+        }
+
+        totalPrizeAll += prizeForBet;
+
+        const payoutEl = betPayoutMap.get(bet.uid);
+        if (payoutEl) {
+          if (hasPrizeConfig && prizeForBet > 0) {
+            const gross = prizeForBet;
+            const net = gross - (bet.cost || 0);
+            const perShare = gross / (bet.shares || 1);
+            const netPerShare = net / (bet.shares || 1);
+
+            payoutEl.style.display = "block";
+            payoutEl.innerHTML =
+              `Premiação estimada: <span class="value">${formatCurrency(gross)}</span>` +
+              ` • <span class="per-share">${formatCurrency(perShare)} por cota</span>` +
+              (bet.shares && bet.shares > 1
+                ? `<br/><span style="font-size:0.7rem;">Lucro líquido estimado por cota: ${formatCurrency(netPerShare)}</span>`
+                : "");
+          } else {
+            payoutEl.style.display = "none";
+          }
+        }
+      });
+
+      // Resumo principal
+      if (selectedNumbers.size === 0) {
+        summaryTextEl.textContent = "Nenhum número sorteado marcado ainda.";
+      } else {
+        summaryTextEl.textContent =
+          `Máximo atual: ${bestHits} acertos em um jogo • ` +
+          `Total de acertos somados em todos os jogos: ${totalHits}`;
+      }
+
+      // Breakdown de 4/5/6 + total estimado
+      const totalPrizeText = hasPrizeConfig ? formatCurrency(totalPrizeAll) : "R$ 0,00";
+      hitsBreakdownEl.innerHTML =
+        `4 pts: <span class="highlight">${count4}</span> jogos • ` +
+        `5 pts: <span class="highlight">${count5}</span> jogos • ` +
+        `6 pts: <span class="highlight">${count6}</span> jogos • ` +
+        `Total estimado: <span class="highlight">${totalPrizeText}</span>`;
+    }
+
+    function updateSelectedCount() {
+      selectedCountEl.textContent = String(selectedNumbers.size);
+    }
+
+    // =========================
+    // Persistência
+    // =========================
+    function saveNumbersToStorage() {
+      try {
+        const arr = Array.from(selectedNumbers);
+        localStorage.setItem(STORAGE_KEY_NUMBERS, JSON.stringify(arr));
+      } catch (_) {}
+    }
+
+    function saveUserBetsToStorage() {
+      try {
+        localStorage.setItem(STORAGE_KEY_USER_BETS, JSON.stringify(userBets));
+      } catch (_) {}
+    }
+
+    function loadFromStorage() {
+      // Números sorteados
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY_NUMBERS);
+        if (raw) {
+          const arr = JSON.parse(raw);
+          if (Array.isArray(arr)) {
+            selectedNumbers = new Set(arr.map((n) => Number(n)));
+          }
+        }
+      } catch (_) {
+        selectedNumbers = new Set();
+      }
+
+      // Jogos adicionais
+      try {
+        const rawBets = localStorage.getItem(STORAGE_KEY_USER_BETS);
+        if (rawBets) {
+          const parsed = JSON.parse(rawBets);
+          if (Array.isArray(parsed)) {
+            userBets = parsed
+              .map((b, idx) => ({
+                uid: b.uid || "user_" + Date.now() + "_" + idx,
+                id: b.id || "",
+                numbers: (b.numbers || []).map((n) => Number(n)).filter((n) => n >= 1 && n <= 60),
+                isUser: true,
+                cost: typeof b.cost === "number" && b.cost > 0
+                  ? b.cost
+                  : estimateBetCost((b.numbers || []).length),
+                shares: Number.isInteger(b.shares) && b.shares >= 1 ? b.shares : 1
+              }))
+              .filter((b) => b.numbers.length >= 6);
+          }
+        }
+      } catch (_) {
+        userBets = [];
+      }
+    }
+
+    // =========================
+    // Utilitários
+    // =========================
+    function parseNumbers(str) {
+      const parts = str
+        .split(/[\s,;]+/)
+        .map((p) => p.trim())
+        .filter(Boolean);
+
+      if (!parts.length) {
+        return { error: "Informe pelo menos 6 números." };
+      }
+
+      const nums = [];
+      for (const p of parts) {
+        const n = Number(p);
+        if (!Number.isInteger(n) || n < 1 || n > 60) {
+          return { error: `Número inválido: "${p}". Use apenas números entre 1 e 60.` };
+        }
+        if (!nums.includes(n)) {
+          nums.push(n);
+        }
+      }
+      return { numbers: nums };
+    }
+
+    function gerarIdAutomatico() {
+      const base = "B";
+      let idx = 1;
+      const existingIds = new Set(allBets.map((b) => b.id));
+      while (existingIds.has(base + String(idx).padStart(2, "0"))) {
+        idx++;
+      }
+      return base + String(idx).padStart(2, "0");
+    }
+
+    // Cálculo combinatório simples C(n, k)
+    function comb(n, k) {
+      n = Number(n);
+      k = Number(k);
+      if (!Number.isInteger(n) || !Number.isInteger(k) || n < 0 || k < 0 || k > n) return 0;
+      if (k === 0 || k === n) return 1;
+      // Aproveita simetria
+      if (k > n - k) k = n - k;
+      let res = 1;
+      for (let i = 1; i <= k; i++) {
+        res = (res * (n - (k - i))) / i;
+      }
+      return Math.round(res);
+    }
+
+    function estimateBetCost(len) {
+      if (!Number.isInteger(len) || len < 6) return BASE_BET_PRICE;
+      // custo ~ preço simples * C(len, 6)
+      const combos = comb(len, 6);
+      return BASE_BET_PRICE * combos;
+    }
+
+    function formatCurrency(value) {
+      const v = Number(value) || 0;
+      return v.toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+        maximumFractionDigits: 2
+      });
+    }
+  </script>
+    <script>
+    // Registro do Service Worker para PWA
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker
+          .register("service-worker.js")
+          .catch((err) => {
+            console.error("Erro ao registrar service worker:", err);
+          });
+      });
+    }
+  </script>
+</body>
+</html>
+
+</body>
+</html>
